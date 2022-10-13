@@ -11,3 +11,36 @@ class Ship:
         self._x = x
         self._y = y
         self._cells = [1] * self._length
+
+    def __setattr__(self, key, value):
+        if key == '_length':
+            assert type(value) == int and 0 <= value <= 4, 'Неверная длина корабля'
+            super().__setattr__(key, value)
+
+        elif key == '_tp':
+            assert value in (1, 2), 'Неверное положение корабля'
+            super().__setattr__(key, value)
+            
+        elif key in ('_x', '_y'):
+            if value is None:
+                super().__setattr__(key, value)
+            else:
+                assert type(value) == int, 'Координаты корабля не int'
+                if (key == '_x' and self._tp == 1) or (key == '_y' and self._tp == 2):
+                    assert 0 <= value < 10 and value + self._length - 1 < 10, 'Карабль такой длинны не на этих x, y'
+                    super().__setattr__(key, value)
+                else:
+                    assert 0 <= value < 10, 'Карабль за координатами поля'
+                    super().__setattr__(key, value)
+                    
+        elif key == '_cells':
+            assert isinstance(value, list) and len(value) == self._length, 'Неверные палубы для карабля'
+            super(Ship, self).__setattr__(key, value)
+
+        else:
+            raise ValueError('Не создавать новые атрибуты кораблям')
+
+
+if __name__ == "__main__":
+    s = Ship(1)
+    s2 = Ship(1, 1, 2, 5)
