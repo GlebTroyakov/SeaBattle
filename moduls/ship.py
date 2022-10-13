@@ -1,2 +1,3 @@
 class Ship:
-    pass
+    """Ship - class for create ships."""
+
