@@ -85,6 +85,15 @@ class Ship:
 
         return False
 
+    def is_out_pole(self, size=10):
+        if (not 0 <= self._x <= size - 1) or (not 0 <= self._y <= size - 1):
+            return True
+
+        if (self._tp == 1 and self._x + self._length > size) or (self._tp == 2 and self._y + self._length > size):
+            return True
+
+        return False
+
 
 if __name__ == "__main__":
     s = Ship(1)
