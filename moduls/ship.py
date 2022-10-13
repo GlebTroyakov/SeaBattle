@@ -40,7 +40,15 @@ class Ship:
         else:
             raise ValueError('Не создавать новые атрибуты кораблям')
 
+    def set_start_coords(self, x, y):
+        self._x = x
+        self._y = y
+
+    def get_start_coords(self):
+        return self._x, self._y
 
 if __name__ == "__main__":
     s = Ship(1)
     s2 = Ship(1, 1, 2, 5)
+    s.set_start_coords(1, 2)
+    print(s.get_start_coords())
