@@ -6,6 +6,7 @@ class Ship:
         tp - ship orientation (1 - horizontal; 2 - vertical).;
         x, y - coordinates of the beginning of the location of the ship (integer);
         cells - a list of length length, consisting of ones, when hitting the ship, the cell will change from 1 to 0."""
+
         self._length = length
         self._tp = tp
         self._x = x
@@ -47,8 +48,50 @@ class Ship:
     def get_start_coords(self):
         return self._x, self._y
 
+    def is_collide(self, ship):
+        """is_collide - checking for a collision with another ship (a collision is considered if another ship
+        either intersects with the current one or simply touches, including diagonally);
+
+        Return True - if is a collision, else - return False."""
+
+        assert isinstance(ship, Ship), 'ship не экземпляр Ship'
+        if self._tp == 1:
+            x_start = self._x - 1
+            x_end = self._x + self._length
+            y_start = self._y - 1
+            y_end = self._y + 1
+
+        elif self._tp == 2:
+            x_start = self._x - 1
+            x_end = self._x + 1
+            y_start = self._y - 1
+            y_end = self._y + self._length
+
+        if ship._tp == 1:
+            ship_x_start = ship._x
+            ship_x_stop = ship._x + ship._length - 1
+            ship_y_start = ship_y_stop = ship._y
+
+        elif ship._tp == 2:
+            ship_x_start = ship_x_stop = ship._x
+            ship_y_start = ship._y
+            ship_y_stop = ship._y + ship._length - 1
+
+        if x_start <= ship_x_start <= x_end and y_start <= ship_y_start <= y_end:
+            return True
+
+        if x_start <= ship_x_stop <= x_end and y_start <= ship_y_stop <= y_end:
+            return True
+
+        return False
+
+
 if __name__ == "__main__":
     s = Ship(1)
     s2 = Ship(1, 1, 2, 5)
     s.set_start_coords(1, 2)
     print(s.get_start_coords())
+    s3 = Ship(1, 1, 3, 4)
+    print(s2.is_collide(s3))
+    s4 = Ship(1, 1, 6, 6)
+    print(s2.is_collide(s4))
