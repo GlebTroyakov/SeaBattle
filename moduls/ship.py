@@ -28,11 +28,11 @@ class Ship:
             else:
                 assert type(value) == int, 'Координаты корабля не int'
                 if (key == '_x' and self._tp == 1) or (key == '_y' and self._tp == 2):
-                    assert 0 <= value < 10 and value + self._length - 1 < 10, 'Карабль такой длинны не на этих x, y'
-                    super().__setattr__(key, value)
+                    if 0 <= value < 10 and value + self._length - 1 < 10:
+                        super().__setattr__(key, value)
                 else:
-                    assert 0 <= value < 10, 'Карабль за координатами поля'
-                    super().__setattr__(key, value)
+                    if 0 <= value < 10:
+                        super().__setattr__(key, value)
                     
         elif key == '_cells':
             assert isinstance(value, list) and len(value) == self._length, 'Неверные палубы для карабля'
