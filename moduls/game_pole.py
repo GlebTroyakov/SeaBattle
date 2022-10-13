@@ -5,7 +5,7 @@ from random import randint
 class GamePole:
     """GamePole - class for working with the playing field."""
 
-    def __init__(self, size):
+    def __init__(self, size=10):
         self._size = size
         self._ships = []
 
@@ -18,8 +18,8 @@ class GamePole:
                        Ship(1, tp=randint(1, 2))]
 
         index_ship = 0
-        tmp_ships = self._ships[:]
-        while index_ship != len(self._ships):
+        tmp_ships = self.get_ships()[:]
+        while index_ship != len(self.get_ships()):
 
             x = randint(0, 9)
             y = randint(0, 9)
@@ -43,3 +43,26 @@ class GamePole:
                         index_ship += 1
         self._ships = tmp_ships[:]
 
+    def get_ships(self):
+        return self._ships
+
+    def show(self):
+        pole = self.get_pole()
+        for row in pole:
+            print(*row)
+
+    def get_pole(self):
+        pole = [['.' for _ in range(self._size)] for _ in range(self._size)]
+        for ship in self.get_ships():
+            for cell in range(ship._length):
+                if ship._tp == 1:
+                    pole[ship._y][ship._x + cell] = 1
+                elif ship._tp == 2:
+                    pole[ship._y + cell][ship._x] = 1
+        return pole
+
+
+if __name__ == "__main__":
+    p = GamePole(10)
+    p.init()
+    p.show()
