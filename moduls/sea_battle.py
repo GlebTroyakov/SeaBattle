@@ -1,10 +1,11 @@
 from game_pole import GamePole
 from random import randint
 
+
 class SeaBattle:
     """SeaBattle - class to start the game."""
     def __init__(self, size):
-        assert type(size) == int and size > 8, 'Размео поля не int больше 8'
+        assert type(size) == int and size > 8, 'Размер поля не int или больше 8'
         self._size = size
         self._man = GamePole(self._size)  # сделать init в методе для запуска игры
         self._man_pole_for_shot = self._man.get_pole()
@@ -73,7 +74,34 @@ class SeaBattle:
                         self._man_pole_ships[y][x] = 'O'
 
                     shot = False
-            self._show_man_pole() # чтоб было видно пападаения короче поле с кораблями человека
+            self._show_man_pole()  # чтоб было видно пападаения короче поле с кораблями человека
             # и с выстрелами компа и далее пустое поле с метками выстрела человека
 
+    def check_shot(self, ship, x, y):
+        hit = False
 
+        if ship._tp == 1:
+            x_start = ship._x
+            x_end = ship._x + ship._length - 1
+            y_start = y_end = ship._y
+
+        elif ship._tp == 2:
+            x_start = x_end = ship._x
+            y_start = ship._y
+            y_end = ship._y + ship._length - 1
+
+        if x_start <= x <= x_end and y_start <= y <= y_end:
+            if ship._is_move:
+                ship._is_move = False
+
+            if ship._tp == 1:
+                cell = x - x_start
+                ship._cells[cell] = 0
+
+            if ship._tp == 2:
+                cell = y - y_start
+                ship._cells[cell] = 0
+
+            hit = True
+
+        return hit
