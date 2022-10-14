@@ -17,7 +17,15 @@ class SeaBattle:
 
     def step(self, player):
         if player == 1:
-            x, y = map(int, input('Введите координаты x и y через пробел: ').split())
+            step = True
+
+            while step:
+                coords = input('Введите координаты x и y через пробел: ')
+                try:
+                    x, y = map(int, coords.split())
+                    step = False
+                except ValueError:
+                    print('Неверно введены координаты x и y.')
 
             while not 1 <= x <= self._size or not 1 <= y <= self._size:
                 print('Координаты за предеалми поля, нужен повторный ввод.')
