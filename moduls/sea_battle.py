@@ -105,3 +105,8 @@ class SeaBattle:
             hit = True
 
         return hit
+
+    def check_health_ship(self, ship):
+        if not any(ship._cells):
+            return True
+        return False
