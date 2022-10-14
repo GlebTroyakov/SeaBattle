@@ -7,11 +7,13 @@ class SeaBattle:
     def __init__(self, size):
         assert type(size) == int and size > 8, 'Размер поля не int или больше 8'
         self._size = size
-        self._man = GamePole(self._size)  # сделать init в методе для запуска игры
-        self._man_pole_for_shot = self._man.get_pole()
+        self._man = GamePole(self._size)
+        self._man.init()
+        self._man_pole_for_shot = [['.' for _ in range(self._size)] for _ in range(self._size)]
         self._man_pole_for_ships = self._man.get_pole()
         self._computer = GamePole(self._size)
-        self._computer_pole_for_ships = self._computer.get_ships()
+        self._computer.init()
+        self._computer_pole_for_ships = self._computer.get_pole()
 
     def step(self, player):
         if player == 1:
@@ -44,7 +46,7 @@ class SeaBattle:
                 print('<<<Промах по компу>>>')
                 self._man_pole_for_shot[y][x] = 'O'
 
-            self._show_man_pole_shots()
+            self._show_man_pole_for_shots()
 
         if player == 2:
             shot = True
@@ -54,11 +56,11 @@ class SeaBattle:
                 x = randint(0, self._size - 1)
                 y = randint(0, self._size - 1)
 
-                if self._man_pole_ships[y][x] in ('.', '1', 1):
+                if self._man_pole_for_ships[y][x] in ('.', '1', 1):
                     hit = False
                     for ship in self._man.get_ships():
                         if self.check_shot(ship, x, y):  # если попал
-                            self._man_pole_ships[y][x] = 'X'
+                            self._man_pole_for_ships[y][x] = 'X'
                             hit = True
                             if self.check_health_ship(ship):  # если корабль убит
                                 self._man._ships.remove(ship)
@@ -72,10 +74,10 @@ class SeaBattle:
 
                     if hit is False:
                         print('<<<Промах по человеку>>>')
-                        self._man_pole_ships[y][x] = 'O'
+                        self._man_pole_for_ships[y][x] = 'O'
 
                     shot = False
-            self._show_man_pole()  # чтоб было видно пападаения короче поле с кораблями человека
+            self._show_man_pole_for_ships()  # чтоб было видно пападаения короче поле с кораблями человека
             # и с выстрелами компа и далее пустое поле с метками выстрела человека
 
     def check_shot(self, ship, x, y):
@@ -92,8 +94,6 @@ class SeaBattle:
             y_end = ship._y + ship._length - 1
 
         if x_start <= x <= x_end and y_start <= y <= y_end:
-            if ship._is_move:
-                ship._is_move = False
 
             if ship._tp == 1:
                 cell = x - x_start
@@ -137,6 +137,23 @@ class SeaBattle:
             return True
 
         return False
+
+    def play(self):
+
+        game_over = self.check_game_over()
+        self._show_man_pole_for_ships()
+        self._show_computer_pole_for_ships()
+        while game_over is False:
+            self.step(1)
+            game_over = self.check_game_over()
+            self.step(2)
+            game_over = self.check_game_over()
+
+
+if __name__ == "__main__":
+    sb = SeaBattle(10)
+    sb.play()
+
 
 
 
