@@ -11,6 +11,7 @@ class SeaBattle:
         self._man_pole_for_shot = self._man.get_pole()
         self._man_pole_for_ships = self._man.get_pole()
         self._computer = GamePole(self._size)
+        self._computer_pole_for_ships = self._computer.get_ships()
 
     def step(self, player):
         if player == 1:
@@ -110,3 +111,19 @@ class SeaBattle:
         if not any(ship._cells):
             return True
         return False
+
+    def _show_man_pole_for_shots(self):
+        print('____мои выстрелы___')
+        for row in self._man_pole_for_shot:
+            print(*row)
+
+    def _show_man_pole_for_ships(self):
+        print('____мои корабли____')
+        for row in self._man_pole_for_ships:
+            print(*row)
+
+    def _show_computer_pole_for_ships(self):
+        print('___корабли компа___')
+        for row in self._computer_pole_for_ships:
+            print(*row)
+
