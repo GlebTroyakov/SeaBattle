@@ -127,3 +127,16 @@ class SeaBattle:
         for row in self._computer_pole_for_ships:
             print(*row)
 
+    def check_game_over(self):
+        if len(self._man._ships) == 0:
+            print('Победа компьютера.')
+            return True
+
+        elif len(self._computer._ships) == 0:
+            print('Победа игрока.')
+            return True
+
+        return False
+
+
+
