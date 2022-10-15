@@ -105,11 +105,11 @@ class SeaBattle:
 
             if ship._tp == 1:
                 cell = x - x_start
-                ship._cells[cell] = 0
+                ship[cell] = 0
 
             if ship._tp == 2:
                 cell = y - y_start
-                ship._cells[cell] = 0
+                ship[cell] = 0
 
             hit = True
 
