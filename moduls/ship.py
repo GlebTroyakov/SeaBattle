@@ -98,6 +98,19 @@ class Ship:
 
         return False
 
+    def check_index_cells(self, index):
+        assert type(index) == int, 'Индекс палубы не целое число'
+        assert 0 <= index < self._length, 'У данного карабля такой палубы нет'
+
+    def __getitem__(self, item):
+        self.check_index_cells(item)
+        return self._cells[item]
+
+    def __setitem__(self, key, value):
+        self.check_index_cells(key)
+        assert value in (1, 0), 'Неверное значение для палубы'
+        self._cells[key] = value
+
 
 # if __name__ == "__main__":
 #     s = Ship(1)
