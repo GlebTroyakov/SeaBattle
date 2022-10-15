@@ -1,7 +1,7 @@
 class Ship:
     """Ship - class for create ships."""
 
-    def __init__(self, length, tp=1, x=None, y=None):
+    def __init__(self, length, tp=1, x=None, y=None, size=10):
         """length - ship length;
         tp - ship orientation (1 - horizontal; 2 - vertical).;
         x, y - coordinates of the beginning of the location of the ship (integer);
@@ -12,6 +12,7 @@ class Ship:
         self._x = x
         self._y = y
         self._cells = [1] * self._length
+        self._size = size
 
     def __setattr__(self, key, value):
         if key == '_length':
@@ -28,16 +29,19 @@ class Ship:
             else:
                 assert type(value) == int, 'Координаты корабля не int'
                 if (key == '_x' and self._tp == 1) or (key == '_y' and self._tp == 2):
-                    if 0 <= value < 10 and value + self._length - 1 < 10:
+                    if 0 <= value < self._size and value + self._length - 1 < self._size:
                         super().__setattr__(key, value)
                 else:
-                    if 0 <= value < 10:
+                    if 0 <= value < self._size:
                         super().__setattr__(key, value)
                     
         elif key == '_cells':
             assert isinstance(value, list) and len(value) == self._length, 'Неверные палубы для карабля'
-            super(Ship, self).__setattr__(key, value)
+            super().__setattr__(key, value)
 
+        elif key == '_size':
+            assert type(value) == int and value > 8, 'Неверный размер поля'
+            super().__setattr__(key, value)
         else:
             raise ValueError('Не создавать новые атрибуты кораблям')
 
@@ -95,12 +99,12 @@ class Ship:
         return False
 
 
-if __name__ == "__main__":
-    s = Ship(1)
-    s2 = Ship(1, 1, 2, 5)
-    s.set_start_coords(1, 2)
-    print(s.get_start_coords())
-    s3 = Ship(1, 1, 3, 4)
-    print(s2.is_collide(s3))
-    s4 = Ship(1, 1, 6, 6)
-    print(s2.is_collide(s4))
+# if __name__ == "__main__":
+#     s = Ship(1)
+#     s2 = Ship(1, 1, 2, 5)
+#     s.set_start_coords(1, 2)
+#     print(s.get_start_coords())
+#     s3 = Ship(1, 1, 3, 4)
+#     print(s2.is_collide(s3))
+#     s4 = Ship(1, 1, 6, 6)
+#     print(s2.is_collide(s4))
