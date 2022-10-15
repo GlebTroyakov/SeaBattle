@@ -18,21 +18,21 @@ class SeaBattle:
     def step(self, player):
         if player == 1:
             step = True
-
             while step:
                 coords = input('Введите координаты x и y через пробел: ')
                 try:
                     x, y = map(int, coords.split())
-                    step = False
+                    if not 1 <= x <= self._size or not 1 <= y <= self._size:
+                        print('Координаты за предеалми поля, нужен повторный ввод.')
+                    else:
+                        x -= 1
+                        y -= 1
+                        if self._man_pole_for_shot[y][x] == '.':
+                            step = False
+                        else:
+                            print('Выстрел по этим координатам уже был. Выберете новые.')
                 except ValueError:
                     print('Неверно введены координаты x и y.')
-
-            while not 1 <= x <= self._size or not 1 <= y <= self._size:
-                print('Координаты за предеалми поля, нужен повторный ввод.')
-                x, y = map(int, input('Введите координаты x и y через пробел: ').split())
-
-            x -= 1
-            y -= 1
 
             hit = False
 
