@@ -12,10 +12,11 @@ class GamePole:
     def init(self):
         """init - creates a field and ships on it."""
 
-        self._ships = [Ship(4, tp=randint(1, 2)), Ship(3, tp=randint(1, 2)), Ship(3, tp=randint(1, 2)),
-                       Ship(2, tp=randint(1, 2)), Ship(2, tp=randint(1, 2)), Ship(2, tp=randint(1, 2)),
-                       Ship(1, tp=randint(1, 2)), Ship(1, tp=randint(1, 2)), Ship(1, tp=randint(1, 2)),
-                       Ship(1, tp=randint(1, 2))]
+        self._ships = [Ship(4, tp=randint(1, 2), size=self._size), Ship(3, tp=randint(1, 2), size=self._size),
+                       Ship(3, tp=randint(1, 2), size=self._size), Ship(2, tp=randint(1, 2), size=self._size),
+                       Ship(2, tp=randint(1, 2), size=self._size), Ship(2, tp=randint(1, 2), size=self._size),
+                       Ship(1, tp=randint(1, 2), size=self._size), Ship(1, tp=randint(1, 2), size=self._size),
+                       Ship(1, tp=randint(1, 2), size=self._size), Ship(1, tp=randint(1, 2), size=self._size)]
 
         index_ship = 0
         tmp_ships = self.get_ships()[:]
@@ -62,7 +63,7 @@ class GamePole:
         return pole
 
 
-if __name__ == "__main__":
-    p = GamePole(10)
-    p.init()
-    p.show()
+# if __name__ == "__main__":
+#     p = GamePole(10)
+#     p.init()
+#     p.show()
