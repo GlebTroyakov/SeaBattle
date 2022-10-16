@@ -1,18 +1,19 @@
 class Ship:
     """Ship - class for create ships."""
 
-    def __init__(self, length, tp=1, x=None, y=None, size=10):
+    def __init__(self, length, size=10, tp=1, x=None, y=None):
         """length - ship length;
         tp - ship orientation (1 - horizontal; 2 - vertical).;
         x, y - coordinates of the beginning of the location of the ship (integer);
         cells - a list of length length, consisting of ones, when hitting the ship, the cell will change from 1 to 0."""
 
         self._length = length
+        self._size = size
         self._tp = tp
         self._x = x
         self._y = y
         self._cells = [1] * self._length
-        self._size = size
+        self._is_move = True
 
     def __setattr__(self, key, value):
         if key == '_length':
@@ -42,6 +43,11 @@ class Ship:
         elif key == '_size':
             assert type(value) == int and value > 8, 'Неверный размер поля'
             super().__setattr__(key, value)
+
+        elif key == '_is_move':
+            assert value in (True, False), '_is_move только булевое значение'
+            super().__setattr__(key, value)
+
         else:
             raise ValueError('Не создавать новые атрибуты кораблям')
 
@@ -111,13 +117,35 @@ class Ship:
         assert value in (1, 0), 'Неверное значение для палубы'
         self._cells[key] = value
 
+    def move(self, go):
+        if self._is_move and go in (-1, 1):
+            if self.check_move(go):
+                if self._tp == 1:
+                    self._x += go
+                    return True
 
-# if __name__ == "__main__":
-#     s = Ship(1)
-#     s2 = Ship(1, 1, 2, 5)
-#     s.set_start_coords(1, 2)
-#     print(s.get_start_coords())
-#     s3 = Ship(1, 1, 3, 4)
-#     print(s2.is_collide(s3))
-#     s4 = Ship(1, 1, 6, 6)
-#     print(s2.is_collide(s4))
+                elif self._tp == 2:
+                    self._y += go
+                    return True
+
+    def check_move(self, go):
+        tmp_ship = Ship(length=self._length, tp=self._tp, x=self._x, y=self._y, size=self._size)
+
+        if tmp_ship._tp == 1:
+            assert type(tmp_ship._x) == int, 'Не двигать корабль без x и y'
+            tmp_ship._x += go
+            if not tmp_ship.is_out_pole():
+                return True
+
+        if tmp_ship._tp == 2:
+            tmp_ship._y += go
+            if not tmp_ship.is_out_pole():
+                return True
+
+        return False
+
+
+
+if __name__ == "__main__":
+    s = Ship(1, 10, 1, 4, 5)
+    s.move(1)
