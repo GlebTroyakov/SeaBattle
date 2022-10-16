@@ -1,5 +1,5 @@
 from ship import Ship
-from random import randint
+from random import randint, choice
 
 
 class GamePole:
@@ -62,8 +62,40 @@ class GamePole:
                     pole[ship._y + cell][ship._x] = 1
         return pole
 
+    def move_ships(self):
+        for ship in self.get_ships():
 
-# if __name__ == "__main__":
-#     p = GamePole(10)
-#     p.init()
-#     p.show()
+            go = choice((-1, 1))
+
+            if ship.move(go):  # если движение возможно то двигаем
+                for another_shop in self.get_ships():  # идем по осталньым кораблям
+                    if another_shop != ship:  #
+                        if another_shop.is_collide(ship):  # если другой окарабль соприкасается с ПЕРЕДВИНУТЫМ
+
+                            go *= -1  # то возвращаемя на шаг назад
+                            ship.move(go)  #
+                            if ship.move(go):  # проверяем еще шаг в обратном направлении и если он возможен
+                                for another_shop_2 in self.get_ships():  # то проверяем другие корабли рна соприкоснование
+                                    if another_shop_2 != ship:  #
+                                        if another_shop_2.is_collide(ship):  # если снова столкновение
+
+                                            go *= -1  # то меняем шаг
+                                            ship.move(go)  # возвращяем корабль на место
+            else:  # если жвиени в том направлении сразу обломалось
+                go *= -1  # то меняем его
+                if ship.move(go):  # проверяем двжиение в новом + ДЕЛАЕМ ШАГ
+                    for another_shop in self.get_ships():
+                        if another_shop != ship:
+                            if another_shop.is_collide(ship):  # если не получилось
+
+                                go *= -1
+                                ship.move(go)
+                else:  # если и в другую сторону нельзя то возвращаем снова на шаг назад
+                    go *= -1
+                    ship.move(go)
+
+
+if __name__ == "__main__":
+    p = GamePole(10)
+    p.init()
+    p.show()
