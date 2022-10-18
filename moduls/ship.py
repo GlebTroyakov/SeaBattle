@@ -117,9 +117,9 @@ class Ship:
         assert value in (1, 0), 'Неверное значение для палубы'
         self._cells[key] = value
 
-    def move(self, go):
+    def move(self, go, coords_shots=[]):
         if self._is_move and go in (-1, 1):
-            if self.check_move(go):
+            if self.check_move(go, coords_shots):
                 if self._tp == 1:
                     self._x += go
                     return True
@@ -128,22 +128,26 @@ class Ship:
                     self._y += go
                     return True
 
-    def check_move(self, go):
+    def check_move(self, go, coords_shots):
         tmp_ship = Ship(length=self._length, tp=self._tp, x=self._x, y=self._y, size=self._size)
-
+        assert type(tmp_ship._x) == int, 'Не двигать корабль без x и y'
         if tmp_ship._tp == 1:
-            assert type(tmp_ship._x) == int, 'Не двигать корабль без x и y'
             tmp_ship._x += go
+
             if not tmp_ship.is_out_pole():
+                if (tmp_ship._x, tmp_ship._y) in coords_shots:
+                    return False
                 return True
 
         if tmp_ship._tp == 2:
             tmp_ship._y += go
+
             if not tmp_ship.is_out_pole():
+                if (tmp_ship._x, tmp_ship._y) in coords_shots:
+                    return False
                 return True
 
         return False
-
 
 
 if __name__ == "__main__":
