@@ -309,7 +309,7 @@ class SeaBattle:
 
         game_over = self.check_game_over()
         self._show_man_pole_for_ships()
-        self._show_computer_pole_for_ships()
+        # self._show_computer_pole_for_ships()
         if self._game_mode == 1:
             while game_over is False:
                 self.step(1)
