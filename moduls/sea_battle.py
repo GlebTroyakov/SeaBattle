@@ -133,15 +133,17 @@ class SeaBattle:
                         if self._man_pole_for_ships[y][x] in ('.', '1', 1):
                             for ship in self._man.get_ships():
                                 if self.check_shot(ship, x, y):  # если попал
-                                    self.computer_hit = True
+
                                     self._man_pole_for_ships[y][x] = 'X'
                                     hit = True
                                     if self.check_health_ship(ship):  # если корабль убит
                                         self._man._ships.remove(ship)
                                         self.computer_hit = False  # lst_hits не чистим т.к. он не заполняется
+                                        # self.lst_hits.clear()
                                         print('<<<Убит корабль человека>>>')
                                     else:
                                         self.lst_hits.append([x, y, 1])
+                                        self.computer_hit = True
                                         print('<<<Ранен корабль человека>>>')
 
                                     break
@@ -156,42 +158,60 @@ class SeaBattle:
                         x = self.lst_hits[0][0]
                         y = self.lst_hits[0][1]
                         go = self.lst_hits[0][2]
-                        if -10 < go < 10:
-                            if 0 <= x + go < self._size:
+                        if 0 < go <= 4:
+                            if 0 <= x + go <= self._size - 1 and self._man_pole_for_ships[y][x + go] in ('.', '1', 1):
                                 x += go
-                        elif go < -10 or go > 10:
-                            if 0 <= y + go % 10 < self._size:
+                            else:
+                                self.lst_hits[0][2] = -1
+                                go = self.lst_hits[0][2]
+                        if -4 <= go < 0:
+                            if 0 <= x + go <= self._size - 1 and self._man_pole_for_ships[y][x + go] in ('.', '1', 1):
+                                x += go
+                            else:
+                                self.lst_hits[0][2] = 11
+                                go = self.lst_hits[0][2]
+                        if go > 10:
+                            if 0 <= y + go - 10 <= self._size - 1 and self._man_pole_for_ships[y + go - 10][x] in ('.', '1', 1):
+                                y += go - 10
+                            else:
+                                self.lst_hits[0][2] = -11
+                                go = self.lst_hits[0][2]
+                        if go < -10:
+                            if 0 <= y + go + 10 <= self._size - 1 and self._man_pole_for_ships[y + go + 10][x] in ('.', '1', 1):
                                 y += go
-                        if self._man_pole_for_ships[y][x] in ('.', '1', 1):
-                            for ship in self._man.get_ships():
-                                if self.check_shot(ship, x, y):  # если попал
-                                    if self.lst_hits[0][2] > 0:
-                                        self.lst_hits[0][2] += 1
-                                    else:
-                                        self.lst_hits[0][2] -= 1
-                                    self._man_pole_for_ships[y][x] = 'X'
-                                    hit = True
-                                    if self.check_health_ship(ship):  # если корабль убит
-                                        self._man._ships.remove(ship)
-                                        self.computer_hit = False
-                                        self.lst_hits.clear()
-                                        print('<<<Убит корабль человека>>>')
-                                    else:
-                                        print('<<<Ранен корабль человека>>>')
+                                y += 10
+                            else:
+                                raise IndexError(f'y = {y}, go = {go}, y + go + 10 = {y + go + 10}')
 
-                                    break
+                        for ship in self._man.get_ships():
+                            if self.check_shot(ship, x, y):  # если попал
+                                if self.lst_hits[0][2] > 0:
+                                    self.lst_hits[0][2] += 1
+                                else:
+                                    self.lst_hits[0][2] -= 1
+                                self._man_pole_for_ships[y][x] = 'X'
+                                hit = True
+                                if self.check_health_ship(ship):  # если корабль убит
+                                    self._man._ships.remove(ship)
+                                    self.computer_hit = False
+                                    self.lst_hits.clear()
+                                    print('<<<Убит корабль человека>>>')
+                                else:
+                                    print('<<<Ранен корабль человека>>>')
 
-                            if hit is False:
-                                print('<<<Промах по человеку>>>')
-                                if 0 < self.lst_hits[0][2] < 4:  # если был по x ->
-                                    self.lst_hits[0][2] = -1  # то меняем на <- x
-                                elif -4< self.lst_hits[0][2] < 0:  # если был по <- x
-                                    self.lst_hits[0][2] = 11  # то меняем на y ^
-                                elif self.lst_hits[0][2] > 10:  # если был по y ^
-                                    self.lst_hits[0][2] = -11  # то меняем на y v
-                                self._man_pole_for_ships[y][x] = 'O'
+                                break
 
-                            shot = False
+                        if hit is False:
+                            print('<<<Промах по человеку>>>')
+                            if 0 < self.lst_hits[0][2] < 4:  # если был по x ->
+                                self.lst_hits[0][2] = -1  # то меняем на <- x
+                            elif -4< self.lst_hits[0][2] < 0:  # если был по <- x
+                                self.lst_hits[0][2] = 11  # то меняем на y ^
+                            elif self.lst_hits[0][2] > 10:  # если был по y ^
+                                self.lst_hits[0][2] = -11  # то меняем на y v
+                            self._man_pole_for_ships[y][x] = 'O'
+
+                        shot = False
 
             if self._game_mode == 2:
                 if hit:
